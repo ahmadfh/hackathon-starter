@@ -173,17 +173,15 @@ exports.getAccount = (req, res) => {
  */
 exports.postUpdateProfile = (req, res, next) => {
   const validationErrors = [];
-  // if (!validator.isEmail(req.body.email)) validationErrors.push({ msg: 'Please enter a valid email address.' });
 
   if (validationErrors.length) {
     req.flash('errors', validationErrors);
     return res.redirect('/account');
   }
-  // req.body.email = validator.normalizeEmail(req.body.email, { gmail_remove_dots: false });
 
   User.findById(req.user.id, (err, user) => {
     if (err) { return next(err); }
-    if (user.email !== req.body.email) user.emailVerified = false;
+
     user.email = req.body.email || '';
     user.profile.name = req.body.name || '';
     user.profile.gender = req.body.gender || '';

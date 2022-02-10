@@ -2,12 +2,43 @@ const moment = require('moment');
 const Attendance = require('../models/Attendance');
 
 /**
- * GET /attendance
+ * GET /attendance/filter
  * Attendance page.
  */
-exports.getAttendance = (req, res, next) => {
+exports.getAttendanceSearch = (req, res, next) => {
+    const fromDate = moment(req.body.dateFrom).startOf('day').toDate();
+    const toDate = moment(req.body.dateTo).startOf('day').toDate();
+    const userId = req.user._doc._id.toString();
+    const hourlyRate = req.user._doc.hourlyRate || 0;
+
+    Attendance.find({todayDate: {$gte: fromDate, $lte: toDate}, userId: userId}, (err, attendanceList) => {
+        if (err) {
+            return next(err);
+        }
+
+        let totalNetSalary = 0;
+        attendanceList = attendanceList.map(value => value._doc)
+        for (let attendance of attendanceList) {
+            let _checkedInAt = moment(attendance.checkedInAt);
+            let _checkedOutAt = moment(attendance.checkedOutAt);
+            const duration = moment.duration(_checkedOutAt.diff(_checkedInAt));
+            const hours = Math.floor(duration.asHours());
+            attendance.totalHours = hours;
+            attendance.netSalary = hours * hourlyRate;
+            totalNetSalary += attendance.netSalary;
+        }
+
+        res.status(200).send({
+            attendanceList: attendanceList,
+            totalNetSalary: totalNetSalary
+        });
+    });
+};
+
+exports.getAttendanceSearchPage = (req, res, next) => {
     const currentTodayDate = moment().startOf('day').toDate();
     const userId = req.user._doc._id.toString();
+    const hourlyRate = req.user._doc.hourlyRate || 0;
 
     Attendance.findOne({todayDate: currentTodayDate, userId: userId}, (err, attendance) => {
         if (err) {
@@ -16,13 +47,54 @@ exports.getAttendance = (req, res, next) => {
         attendance = attendance ? attendance._doc : null;
 
         if (attendance) {
-            attendance.checkedInAtTime = moment(attendance.checkedInAt).format("hh:mm A");
-            attendance.checkedOutAtTime = moment(attendance.checkedOutAt).format("hh:mm A");
+            let _checkedInAt = moment(attendance.checkedInAt);
+            let _checkedOutAt = moment(attendance.checkedOutAt);
+            attendance.checkedInAtTime = _checkedInAt.format("hh:mm A");
+            attendance.checkedOutAtTime = _checkedOutAt.format("hh:mm A");
+
+            const duration = moment.duration(_checkedOutAt.diff(_checkedInAt));
+            const hours = Math.floor(duration.asHours());
+            attendance.totalWorkingHours = hours;
+        }
+
+        res.render('attendance/filter', {
+            title: 'Attendance Search',
+            attendance: attendance,
+            hourlyRate: hourlyRate
+        });
+    });
+};
+
+/**
+ * GET /attendance
+ * Attendance page.
+ */
+exports.getAttendance = (req, res, next) => {
+    const currentTodayDate = moment().startOf('day').toDate();
+    const userId = req.user._doc._id.toString();
+    const hourlyRate = req.user._doc.hourlyRate || 0;
+
+    Attendance.findOne({todayDate: currentTodayDate, userId: userId}, (err, attendance) => {
+        if (err) {
+            return next(err);
+        }
+        attendance = attendance ? attendance._doc : null;
+
+        if (attendance) {
+            let _checkedInAt = moment(attendance.checkedInAt);
+            let _checkedOutAt = moment(attendance.checkedOutAt);
+            attendance.checkedInAtTime = _checkedInAt.format("hh:mm A");
+            attendance.checkedOutAtTime = _checkedOutAt.format("hh:mm A");
+
+            const duration = moment.duration(_checkedOutAt.diff(_checkedInAt));
+            const hours = Math.floor(duration.asHours());
+            attendance.totalWorkingHours = hours;
         }
 
         res.render('attendance/home', {
-            title: 'Attendance',
-            attendance: attendance
+            title: 'Attendance Daily',
+            attendance: attendance,
+            hourlyRate: hourlyRate
         });
     });
 };

@@ -4,5 +4,6 @@ block content
   if user && user.profile
     h1= user.profile.name || user.username || user.id
   else
-    a.nav-link(href='/login')
+    div.btn-group
+    a.nav-link.btn.btn-lg.btn-primary.text-center(href='/login')
       h1 Login

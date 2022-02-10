@@ -1,0 +1,40 @@
+extends ../layout
+
+block content
+
+
+  if user && user.profile
+    h1 #{user.profile.name || user.username || user.id} - Weekly Attendance
+
+  form.needs-validation(novalidate='')
+    .form-row
+      .col-md-4.mb-3
+        label(for='fromDate') Date From
+        input#fromDate.form-control(type='date' value='Mark' required='')
+        .valid-feedback
+          | Looks good!
+      .col-md-4.mb-3
+        label(for='toDate') Date To
+        input#toDate.form-control(type='date'  value='Otto' required='')
+        .valid-feedback
+          | Looks good!
+
+      .col-md-4.mb-3
+        label(for='btn-search') Action
+        button#btn-search.form-control.btn.btn-primary(type='button') Search
+
+
+    br
+    br
+    br
+
+    table#searchResult.table.table-bordered.table-dark
+      thead
+        tr
+          th(scope='col') #
+          th(scope='col') Date
+          th(scope='col') Hours
+          th(scope='col') Salary
+          th(scope='col')
+      tbody
+
