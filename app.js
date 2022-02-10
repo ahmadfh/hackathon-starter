@@ -16,9 +16,9 @@ const path = require('path');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const sass = require('node-sass-middleware');
-const multer = require('multer');
+// const multer = require('multer');
 
-const upload = multer({ dest: path.join(__dirname, 'uploads') });
+// const upload = multer({ dest: path.join(__dirname, 'uploads') });
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
@@ -30,7 +30,7 @@ dotenv.config({ path: '.env' });
  */
 const homeController = require('./controllers/home');
 const userController = require('./controllers/user');
-const apiController = require('./controllers/api');
+const attendanceController = require('./controllers/attendance');
 const contactController = require('./controllers/contact');
 
 /**
@@ -143,11 +143,9 @@ app.post('/account/profile', passportConfig.isAuthenticated, userController.post
 app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
-
-/**
- * API examples routes.
- */
-app.get('/api', apiController.getApi);
+app.get('/attendance/', passportConfig.isAuthenticated, attendanceController.getAttendance);
+app.post('/attendance/checkin', passportConfig.isAuthenticated, attendanceController.postAttendanceCheckin);
+app.post('/attendance/checkout', passportConfig.isAuthenticated, attendanceController.postAttendanceCheckout);
 
 /**
  * Error Handler.

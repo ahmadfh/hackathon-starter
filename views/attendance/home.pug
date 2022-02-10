@@ -1,0 +1,35 @@
+extends ../layout
+
+block content
+  if user && user.profile
+    h1= user.profile.name || user.username || user.id
+
+  .pb-2.mt-2.mb-4.border-bottom
+    h3 Attendance
+
+  if attendance && attendance.checkedInAt
+    h3 Checked in at:
+      =" "
+      span= attendance.checkedInAtTime
+
+  if attendance && attendance.checkedOutAt
+    h3 Checked out at:
+      =" "
+      span= attendance.checkedOutAtTime
+
+  if !attendance || attendance && !attendance.checkedInAt
+    form(action='/attendance/checkin', method='POST')
+      input(type='hidden', name='_csrf', value=_csrf)
+      .form-group
+        .offset-sm-3.col-md-7.pl-2
+          button.btn.btn.btn-primary(type='submit')
+            i.fas.fa-sm
+            | Check In
+  if attendance && !attendance.checkedOutAt && attendance.checkedInAt
+    form(action='/attendance/checkout', method='POST')
+      input(type='hidden', name='_csrf', value=_csrf)
+      .form-group
+        .offset-sm-3.col-md-7.pl-2
+          button.btn.btn.btn-danger(type='submit')
+            i.fas.fa-sm
+            | Check Out
