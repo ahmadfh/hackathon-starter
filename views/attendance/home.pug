@@ -11,7 +11,7 @@ block content
   hr
   h3 Total Hours: #{attendance && attendance.totalWorkingHours || 0} Hours
   hr
-  h3 Net Salary: #{attendance && attendance.totalWorkingHours && attendance.totalWorkingHours * hourlyRate || 0}₪
+  h3 Net Daily Salary: #{attendance && attendance.totalWorkingHours && attendance.totalWorkingHours * hourlyRate || 0}₪
 
   if !attendance || attendance && !attendance.checkedInAt
       .form-group

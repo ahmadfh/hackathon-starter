@@ -7,8 +7,6 @@ exports.index = (req, res) => {
         res.redirect('/attendance');
     } else {
 
-        res.render('home', {
-            title: 'Home'
-        });
+        res.redirect('/login');
     }
 };

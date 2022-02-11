@@ -1,5 +1,19 @@
 /* eslint-env jquery, browser */
 $(document).ready(() => {
+
+    $(".keypad .item").click(function () {
+        let keypadNumber = $(this).attr('data-number');
+        if (keypadNumber === 'delete') {
+            let password = $("#password").val().split('');
+            password.pop();
+            password = password.join('');
+            $("#password").val(password);
+        } else {
+            let password = $("#password").val() + keypadNumber;
+            $("#password").val(password);
+        }
+    })
+
     // Place JavaScript code here...
     $("#btn-checkin").click(() => {
         fetch('/attendance/checkin', {
@@ -33,11 +47,12 @@ $(document).ready(() => {
         });
     });
 
-    if(document.getElementById("fromDate"))
+    if (document.getElementById("fromDate"))
         document.getElementById("fromDate").valueAsDate = new Date();
 
-    if(document.getElementById("toDate"))
-        document.getElementById("toDate").valueAsDate = moment().add(1, 'weeks').toDate();;
+    if (document.getElementById("toDate"))
+        document.getElementById("toDate").valueAsDate = moment().add(1, 'weeks').toDate();
+    ;
 
     $("#btn-search").click(() => {
         let _dateFrom = $("#fromDate").val();

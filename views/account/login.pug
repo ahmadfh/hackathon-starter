@@ -1,8 +1,6 @@
 extends ../layout
 
 block content
-  .pb-2.mt-2.mb-4.border-bottom
-    h3 Sign in
   form(method='POST')
     input(type='hidden', name='_csrf', value=_csrf)
     .form-group.row
@@ -13,9 +11,27 @@ block content
       label.col-md-3.col-form-label.font-weight-bold.text-right(for='password') Password
       .col-md-7
         input.form-control(type='password', name='password', id='password', placeholder='Password', autocomplete='current-password', required)
-    .form-group
-      .offset-md-3.col-md-7.pl-2
+
+    div.keypad-container
+      ul.keypad
+        li(data-number='1').item 1
+        li(data-number='2').item 2
+        li(data-number='3').item 3
+        li(data-number='delete').item
+          .i.fas.fa-backspace
+      ul.keypad
+        li(data-number='4').item 4
+        li(data-number='5').item 5
+        li(data-number='6').item 6
+        li(data-number='').item.empty
+      ul.keypad
+        li(data-number='7').item 7
+        li(data-number='8').item 8
+        li(data-number='9').item 9
+        li(data-number='').item.empty
+
+    .form-group.text-center
         button.col-md-3.btn.btn-primary(type='submit')
           i.far.fa-user.fa-sm
           | Login
-        //a.btn.btn-link(href='/forgot') Forgot your password?
+

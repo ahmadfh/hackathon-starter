@@ -140,7 +140,7 @@ app.post('/account/delete', passportConfig.isAuthenticated, userController.postD
 app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
 app.get('/attendance/', passportConfig.isAuthenticated, attendanceController.getAttendance);
 app.get('/attendance/search', passportConfig.isAuthenticated, attendanceController.getAttendanceSearchPage);
-app.post('/attendance/search', passportConfig.isAuthenticated, attendanceController.getAttendanceSearch);
+app.post('/attendance/search', passportConfig.isAuthenticated, attendanceController.postAttendanceSearch);
 app.post('/attendance/checkin', passportConfig.isAuthenticated, attendanceController.postAttendanceCheckin);
 app.post('/attendance/checkout', passportConfig.isAuthenticated, attendanceController.postAttendanceCheckout);
 

@@ -2,10 +2,10 @@ const moment = require('moment');
 const Attendance = require('../models/Attendance');
 
 /**
- * GET /attendance/filter
+ * POST /attendance/filter
  * Attendance page.
  */
-exports.getAttendanceSearch = (req, res, next) => {
+exports.postAttendanceSearch = (req, res, next) => {
     const fromDate = moment(req.body.dateFrom).startOf('day').toDate();
     const toDate = moment(req.body.dateTo).startOf('day').toDate();
     const userId = req.user._doc._id.toString();
@@ -22,7 +22,7 @@ exports.getAttendanceSearch = (req, res, next) => {
             let _checkedInAt = moment(attendance.checkedInAt);
             let _checkedOutAt = moment(attendance.checkedOutAt);
             const duration = moment.duration(_checkedOutAt.diff(_checkedInAt));
-            const hours = Math.floor(duration.asHours());
+            const hours = duration.asHours().toFixed(2);
             attendance.totalHours = hours;
             attendance.netSalary = hours * hourlyRate;
             totalNetSalary += attendance.netSalary;
@@ -53,7 +53,7 @@ exports.getAttendanceSearchPage = (req, res, next) => {
             attendance.checkedOutAtTime = _checkedOutAt.format("hh:mm A");
 
             const duration = moment.duration(_checkedOutAt.diff(_checkedInAt));
-            const hours = Math.floor(duration.asHours());
+            const hours = duration.asHours().toFixed(2);
             attendance.totalWorkingHours = hours;
         }
 
@@ -87,7 +87,7 @@ exports.getAttendance = (req, res, next) => {
             attendance.checkedOutAtTime = _checkedOutAt.format("hh:mm A");
 
             const duration = moment.duration(_checkedOutAt.diff(_checkedInAt));
-            const hours = Math.floor(duration.asHours());
+            const hours = duration.asHours().toFixed(2);
             attendance.totalWorkingHours = hours;
         }
 
